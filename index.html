@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pip - AI Chatbot</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+    <div class="app">
+        <aside class="sidebar">
+            <h2>🤖 PipBot</h2>
+            <p>Your friendly assistant.</p>
+        </aside>
+
+        <main class="chat-area">
+            <header class="chat-header">
+                <span>Chat with Pip</span>
+            </header>
+
+            <div class="chat-box" id="chatBox">
+                <div class="message bot">Hello! I'm Pip. How can I help you today?</div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type a message..." autocomplete="off">
+                <button id="sendBtn">Send</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
