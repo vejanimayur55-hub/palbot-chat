@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pip Chat bot</title>
+    <title>Pipbot Neo</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -11,9 +11,13 @@
 
     <div class="app">
         <aside class="sidebar">
-            <div class="logo">Pipbot <span class="version">v1.0</span></div>
+            <div class="logo">Pipbot <span class="version">NEO</span></div>
             <div class="status-indicator">
                 <span class="dot"></span> SYSTEM ONLINE
+            </div>
+            <div style="margin-top: 20px; font-size: 12px; color: #888;">
+                <p>Voice Module: Active</p>
+                <p>Neural Link: Stable</p>
             </div>
         </aside>
 
@@ -24,11 +28,12 @@
 
             <div class="chat-box" id="chatBox">
                 <div class="message bot">
-                    <div class="content">System initialized. I am Pipbot. How can I help you?</div>
+                    <div class="content">System initialized. Voice module ready. How can I help?</div>
                 </div>
             </div>
 
             <div class="chat-input">
+                <button id="voiceBtn" class="voice-btn" title="Push to Talk">🎤</button>
                 <input type="text" id="userInput" placeholder="Enter command..." autocomplete="off">
                 <button id="sendBtn">TRANSMIT</button>
             </div>

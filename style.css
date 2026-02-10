@@ -8,12 +8,12 @@
     --border-glow: rgba(0, 247, 255, 0.2);
 }
 
-/* --- GLOBAL RESET & GRID BACKGROUND --- */
+/* --- GLOBAL RESET --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Consolas, monospace; /* The "Neo" Font */
+    font-family: Consolas, monospace;
 }
 
 body {
@@ -24,7 +24,7 @@ body {
     position: relative;
 }
 
-/* THE GLOWING GRID EFFECT */
+/* GLOWING GRID BACKGROUND */
 body::before {
     content: "";
     position: fixed;
@@ -48,7 +48,7 @@ body::before {
 /* --- SIDEBAR --- */
 .sidebar {
     width: 260px;
-    background: rgba(13, 19, 32, 0.8); /* var(--panel) with opacity */
+    background: rgba(13, 19, 32, 0.8);
     backdrop-filter: blur(6px);
     border-right: 1px solid var(--border-glow);
     padding: 20px;
@@ -59,14 +59,13 @@ body::before {
 .logo {
     font-size: 24px;
     color: var(--cyan);
-    text-shadow: 0 0 10px var(--cyan); /* Neon Glow */
+    text-shadow: 0 0 10px var(--cyan);
     margin-bottom: 5px;
 }
 
 .version {
     font-size: 14px;
     color: var(--pink);
-    opacity: 0.8;
 }
 
 .status-indicator {
@@ -95,14 +94,11 @@ body::before {
     position: relative;
 }
 
-/* --- HEADER --- */
 .chat-header {
     padding: 15px 20px;
     backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--border-glow);
     color: var(--text);
-    font-size: 16px;
-    letter-spacing: 1px;
     background: rgba(5, 8, 15, 0.6);
 }
 
@@ -116,9 +112,9 @@ body::before {
     flex-direction: column;
     gap: 15px;
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Message Bubbles (Based on your snippet) */
 .message {
     max-width: 85%;
     padding: 12px 16px;
@@ -126,34 +122,24 @@ body::before {
     font-size: 15px;
     line-height: 1.5;
     position: relative;
-    animation: pop 0.3s ease; /* The pop animation */
-    
-    /* Neo Styling */
     background: var(--panel);
     border: 1px solid var(--border-glow);
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
     color: var(--text);
+    animation: pop 0.3s ease;
 }
 
-/* User Variant */
 .message.user {
     align-self: flex-end;
-    border-color: var(--pink); /* Pink border for user */
+    border-color: var(--pink);
     box-shadow: 0 0 5px rgba(212, 0, 255, 0.2);
 }
 
-/* Bot Variant */
 .message.bot {
     align-self: flex-start;
-    border-color: var(--cyan); /* Cyan border for bot */
+    border-color: var(--cyan);
 }
 
-/* Bot Icon/Avatar adjustment */
-.message.bot::before {
-    display: none; /* Removing the old emoji icon to fit the sleek text style */
-}
-
-/* List fixes inside bot messages */
 .message.bot ul, .message.bot ol { margin: 10px 0; padding-left: 25px; }
 .message.bot li { margin-bottom: 5px; }
 
@@ -165,6 +151,37 @@ body::before {
     border-top: 1px solid var(--border-glow);
     display: flex;
     gap: 10px;
+    align-items: center;
+}
+
+/* --- VOICE BUTTON STYLES --- */
+.voice-btn {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* Circle shape */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.voice-btn:hover {
+    background: rgba(0, 247, 255, 0.1);
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+/* Active Listening State */
+.voice-btn.listening {
+    border-color: var(--pink);
+    color: var(--pink);
+    box-shadow: 0 0 15px var(--pink);
+    animation: pulse 1.5s infinite;
 }
 
 .chat-input input {
@@ -172,45 +189,29 @@ body::before {
     background: black;
     border: 1px solid var(--border-glow);
     color: var(--cyan);
-    padding: 10px 15px;
+    padding: 12px 15px;
     border-radius: 6px;
     outline: none;
     font-size: 16px;
 }
 
-.chat-input input:focus {
-    box-shadow: 0 0 10px rgba(0, 247, 255, 0.1);
-}
-
-.chat-input button {
+.chat-input button#sendBtn {
     background: linear-gradient(45deg, var(--cyan), var(--pink));
     border: none;
-    padding: 10px 20px;
+    padding: 0 20px;
+    height: 45px;
     border-radius: 6px;
     cursor: pointer;
     color: black;
     font-weight: bold;
-    font-size: 14px;
-    transition: 0.3s;
     text-transform: uppercase;
 }
 
-.chat-input button:hover {
-    box-shadow: 0 0 12px var(--cyan);
-    transform: translateY(-1px);
-}
-
 /* --- ANIMATIONS --- */
-@keyframes pop {
-    from { transform: translateY(6px); opacity: 0; }
-    to { transform: none; opacity: 1; }
-}
+@keyframes pop { from { transform: translateY(6px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes blink { 50% { opacity: 0.3; } }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-@keyframes blink {
-    50% { opacity: 0.3; }
-}
-
-/* --- MOBILE TWEAKS --- */
 @media (max-width: 768px) {
     .sidebar { display: none; }
     .message { max-width: 90%; }

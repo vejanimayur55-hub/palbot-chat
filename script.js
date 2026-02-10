@@ -2,21 +2,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatBox = document.getElementById("chatBox");
     const userInput = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
+    const voiceBtn = document.getElementById("voiceBtn");
 
-    // Memory storage (resets on refresh)
     let conversationHistory = [];
 
-    if (userInput) userInput.focus();
+    // --- 1. VOICE RECOGNITION SETUP ---
+    // Check if browser supports it (Chrome, Edge, Safari, Android)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false; // Stop after one sentence
+        recognition.lang = 'en-US';
+
+        // Click Mic Button
+        voiceBtn.addEventListener('click', () => {
+            if (voiceBtn.classList.contains('listening')) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        });
+
+        // Start Listening
+        recognition.onstart = () => {
+            voiceBtn.classList.add('listening');
+            userInput.placeholder = "Listening...";
+        };
+
+        // Stop Listening
+        recognition.onend = () => {
+            voiceBtn.classList.remove('listening');
+            userInput.placeholder = "Enter command...";
+            userInput.focus();
+        };
+
+        // Get Result
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            userInput.value = transcript;
+            // Optional: Remove "//" below to auto-send immediately
+            // sendMessage(); 
+        };
+    } else {
+        console.log("Web Speech API not supported.");
+        voiceBtn.style.display = "none"; // Hide button if not supported
+    }
+
+    // --- 2. CHAT LOGIC ---
     async function sendMessage() {
         const text = userInput.value.trim();
         if (!text) return;
 
-        // 1. Show User Message
         addMessage(text, 'user');
         userInput.value = '';
 
-        // 2. Send to Server
         try {
             const res = await fetch('/api/chat', {
                 method: 'POST',
@@ -28,16 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await res.json();
-            
-            // 3. Show Bot Message
             addMessage(data.reply, 'bot');
 
-            // 4. Update Memory
             conversationHistory.push({ role: "user", content: text });
             conversationHistory.push({ role: "assistant", content: data.reply });
 
         } catch (err) {
-            addMessage("Error: Is the server running?", 'bot');
+            addMessage("Error: Server offline.", 'bot');
         }
     }
 
@@ -45,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = `message ${sender}`;
         
-        // Render Markdown if available
         if (sender === 'bot' && typeof marked !== 'undefined') {
             div.innerHTML = marked.parse(text);
         } else {
@@ -56,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Event Listeners
     if (sendBtn) sendBtn.addEventListener("click", sendMessage);
     
     if (userInput) {

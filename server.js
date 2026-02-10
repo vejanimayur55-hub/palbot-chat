@@ -1,45 +1,43 @@
 console.log("--------------------------------------------------");
-console.log("🚀 SYSTEM CHECK: Starting Local Chatbot Server...");
+console.log("🚀 SYSTEM CHECK: Starting Pipbot Server...");
 
-// 1. Load Modules
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
+// Use the port Render assigns (or 3000 for local)
 const PORT = process.env.PORT || 3000;
 
-// --- CONFIGURATION ---
-// PASTE YOUR GROQ KEY HERE
-// Use the environment variable if available, otherwise use the hardcoded one (for local testing)
-// Remove the actual key text!
+// SECURE KEY HANDLING
+// We read this from Render's "Environment Variables"
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 app.use(express.json());
 app.use(cors());
-
-// Serve static files (HTML, CSS, JS) from the current folder
 app.use(express.static(path.join(__dirname)));
 
-// --- ROUTE: CHAT ---
+// --- API ROUTE ---
 app.post('/api/chat', async (req, res) => {
     const { message, history } = req.body;
 
-    console.log(`\n📨 User: "${message}"`);
+    // Safety Check
+    if (!GROQ_API_KEY) {
+        return res.json({ reply: "⚠️ System Error: API Key missing in server settings." });
+    }
 
-    // Prepare conversation for Groq (OpenAI format)
     const conversation = [
-        { role: "system", content: "You are Pip, a helpful AI Assistant. Be concise and use Markdown." },
-        ...(history || []), // Add conversation history
-        { role: "user", content: message } // Add new message
+        { role: "system", content: "You are Pipbot Neo, a futuristic AI Assistant. Be concise, technical, and helpful. Use Markdown." },
+        ...(history || []),
+        { role: "user", content: message }
     ];
 
     try {
         const response = await axios.post(
             'https://api.groq.com/openai/v1/chat/completions',
             {
-                model: "llama-3.3-70b-versatile", // Smartest model
+                model: "llama-3.3-70b-versatile",
                 messages: conversation
             },
             {
@@ -51,13 +49,12 @@ app.post('/api/chat', async (req, res) => {
         );
 
         const botReply = response.data.choices[0].message.content;
-        console.log("✅ Bot Replied");
         res.json({ reply: botReply });
 
     } catch (error) {
-        console.error("❌ GROQ ERROR:", error.response ? error.response.data : error.message);
-        res.json({ reply: "I am having trouble connecting to the AI right now." });
+        console.error("❌ Groq API Error:", error.message);
+        res.json({ reply: "⚠️ Signal Interrupted: Unable to reach AI core." });
     }
 });
 
-app.listen(PORT, () => console.log(`🚀 SERVER RUNNING ON: http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 SERVER ONLINE ON PORT: ${PORT}`));
