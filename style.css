@@ -1,99 +1,90 @@
-/* --- CYBERPUNK THEME VARIABLES --- */
+/* --- PIPBOT NEO THEME --- */
 :root {
-    --neon-cyan: #00f3ff;
-    --neon-purple: #bc13fe;
-    --dark-bg: #050510;
-    --glass-panel: rgba(20, 20, 35, 0.7);
-    --border-color: rgba(0, 243, 255, 0.3);
+    --cyan: #00f7ff;
+    --pink: #d400ff;
+    --bg: #060b14;
+    --panel: #0d1320;
+    --text: #e0ffff;
+    --border-glow: rgba(0, 247, 255, 0.2);
 }
 
-/* --- GLOBAL RESET --- */
+/* --- GLOBAL RESET & GRID BACKGROUND --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto Mono', monospace; /* Tech font */
+    font-family: Consolas, monospace; /* The "Neo" Font */
 }
 
-body, html {
-    height: 100%;
+body {
+    background: var(--bg);
+    color: var(--text);
     height: 100dvh;
-    background-color: var(--dark-bg);
-    /* Deep space gradient background */
-    background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 100%);
-    color: #e0e0e0;
     overflow: hidden;
+    position: relative;
 }
 
-/* --- MAIN LAYOUT --- */
+/* THE GLOWING GRID EFFECT */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        linear-gradient(#0a1520 1px, transparent 1px),
+        linear-gradient(90deg, #0a1520 1px, transparent 1px);
+    background-size: 35px 35px;
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* --- LAYOUT --- */
 .app {
     display: flex;
     height: 100%;
     width: 100vw;
-    position: relative;
-}
-
-/* Scanline effect overlay */
-.app::before {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    z-index: 2;
-    background-size: 100% 2px, 3px 100%;
-    pointer-events: none; /* Click through it */
 }
 
 /* --- SIDEBAR --- */
 .sidebar {
     width: 260px;
-    background: rgba(10, 10, 15, 0.8);
-    backdrop-filter: blur(10px);
-    border-right: 1px solid var(--border-color);
-    padding: 30px 20px;
+    background: rgba(13, 19, 32, 0.8); /* var(--panel) with opacity */
+    backdrop-filter: blur(6px);
+    border-right: 1px solid var(--border-glow);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 32px;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 10px var(--neon-cyan);
-    letter-spacing: 2px;
+    font-size: 24px;
+    color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan); /* Neon Glow */
+    margin-bottom: 5px;
 }
 
 .version {
-    font-size: 12px;
-    color: var(--neon-purple);
+    font-size: 14px;
+    color: var(--pink);
+    opacity: 0.8;
 }
 
 .status-indicator {
+    margin-top: 20px;
     font-size: 12px;
-    color: #0f0;
+    color: var(--cyan);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .dot {
     width: 8px;
     height: 8px;
-    background: #0f0;
+    background: var(--cyan);
     border-radius: 50%;
-    box-shadow: 0 0 8px #0f0;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+    box-shadow: 0 0 8px var(--cyan);
+    animation: blink 2s infinite;
 }
 
 /* --- CHAT AREA --- */
@@ -102,22 +93,20 @@ body, html {
     display: flex;
     flex-direction: column;
     position: relative;
-    z-index: 1; /* Behind scanlines */
 }
 
 /* --- HEADER --- */
 .chat-header {
-    background: rgba(0, 0, 0, 0.5);
-    border-bottom: 1px solid var(--border-color);
-    color: var(--neon-cyan);
-    padding: 15px 25px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 14px;
+    padding: 15px 20px;
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border-glow);
+    color: var(--text);
+    font-size: 16px;
     letter-spacing: 1px;
-    flex-shrink: 0;
+    background: rgba(5, 8, 15, 0.6);
 }
 
-/* --- CHAT BOX --- */
+/* --- CHAT MESSAGES --- */
 .chat-box {
     flex: 1;
     min-height: 0;
@@ -125,112 +114,105 @@ body, html {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
 }
 
-/* Custom Scrollbar */
-.chat-box::-webkit-scrollbar { width: 6px; }
-.chat-box::-webkit-scrollbar-track { background: #000; }
-.chat-box::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 3px; }
-
-/* --- MESSAGES --- */
+/* Message Bubbles (Based on your snippet) */
 .message {
     max-width: 85%;
-    padding: 15px 20px;
+    padding: 12px 16px;
+    border-radius: 6px;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.5;
     position: relative;
-    border: 1px solid transparent;
+    animation: pop 0.3s ease; /* The pop animation */
+    
+    /* Neo Styling */
+    background: var(--panel);
+    border: 1px solid var(--border-glow);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    color: var(--text);
 }
 
-/* User Message */
+/* User Variant */
 .message.user {
     align-self: flex-end;
-    background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(0, 243, 255, 0.05));
-    border-color: var(--neon-cyan);
-    color: #fff;
-    border-radius: 15px 15px 2px 15px; /* Sharp corner bottom right */
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+    border-color: var(--pink); /* Pink border for user */
+    box-shadow: 0 0 5px rgba(212, 0, 255, 0.2);
 }
 
-/* Bot Message */
+/* Bot Variant */
 .message.bot {
     align-self: flex-start;
-    background: rgba(255, 255, 255, 0.05);
-    border-left: 3px solid var(--neon-purple);
-    color: #d0d0d0;
-    border-radius: 2px 15px 15px 15px; /* Sharp corner top left */
-    margin-left: 0;
+    border-color: var(--cyan); /* Cyan border for bot */
 }
 
-/* Lists in Bot Message */
-.message.bot ul, .message.bot ol {
-    margin: 10px 0;
-    padding-left: 20px;
-    border-left: 1px solid rgba(255,255,255,0.2);
+/* Bot Icon/Avatar adjustment */
+.message.bot::before {
+    display: none; /* Removing the old emoji icon to fit the sleek text style */
 }
+
+/* List fixes inside bot messages */
+.message.bot ul, .message.bot ol { margin: 10px 0; padding-left: 25px; }
 .message.bot li { margin-bottom: 5px; }
-
-/* Code blocks in messages */
-.message code {
-    background: rgba(0,0,0,0.5);
-    padding: 2px 5px;
-    border-radius: 4px;
-    color: #ff79c6;
-    font-family: 'Courier New', Courier, monospace;
-}
 
 /* --- INPUT AREA --- */
 .chat-input {
+    padding: 15px;
+    background: rgba(5, 8, 15, 0.9);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border-glow);
     display: flex;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    border-top: 1px solid var(--border-color);
-    gap: 15px;
-    flex-shrink: 0;
+    gap: 10px;
 }
 
 .chat-input input {
     flex: 1;
-    padding: 15px;
-    background: rgba(0, 243, 255, 0.05);
-    border: 1px solid var(--border-color);
-    color: var(--neon-cyan);
-    font-family: 'Roboto Mono', monospace;
-    font-size: 16px;
+    background: black;
+    border: 1px solid var(--border-glow);
+    color: var(--cyan);
+    padding: 10px 15px;
+    border-radius: 6px;
     outline: none;
-    transition: all 0.3s ease;
+    font-size: 16px;
 }
 
 .chat-input input:focus {
-    background: rgba(0, 243, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 247, 255, 0.1);
 }
 
 .chat-input button {
-    padding: 0 25px;
-    background: var(--neon-cyan);
-    color: #000;
-    font-weight: bold;
+    background: linear-gradient(45deg, var(--cyan), var(--pink));
     border: none;
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 1px;
+    padding: 10px 20px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s;
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.3s;
     text-transform: uppercase;
 }
 
 .chat-input button:hover {
-    background: #fff;
-    box-shadow: 0 0 20px var(--neon-cyan);
+    box-shadow: 0 0 12px var(--cyan);
+    transform: translateY(-1px);
 }
 
-/* --- MOBILE ADJUSTMENTS --- */
+/* --- ANIMATIONS --- */
+@keyframes pop {
+    from { transform: translateY(6px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+}
+
+@keyframes blink {
+    50% { opacity: 0.3; }
+}
+
+/* --- MOBILE TWEAKS --- */
 @media (max-width: 768px) {
-    .app { flex-direction: column; }
     .sidebar { display: none; }
     .message { max-width: 90%; }
-    .chat-input { padding: 15px; }
+    .chat-input { padding: 10px; }
 }
