@@ -54,6 +54,8 @@ body::before {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    /* This ensures content can be spaced out */
+    justify-content: flex-start; 
 }
 
 .logo {
@@ -68,13 +70,19 @@ body::before {
     color: var(--pink);
 }
 
+/* Pushes the status indicator to the bottom */
+.spacer {
+    flex: 1; 
+}
+
 .status-indicator {
-    margin-top: 20px;
     font-size: 12px;
     color: var(--cyan);
     display: flex;
     align-items: center;
     gap: 8px;
+    /* Ensures it sits at the bottom left */
+    margin-top: auto; 
 }
 
 .dot {
@@ -161,7 +169,7 @@ body::before {
     color: var(--cyan);
     width: 45px;
     height: 45px;
-    border-radius: 50%; /* Circle shape */
+    border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -176,7 +184,6 @@ body::before {
     box-shadow: 0 0 10px var(--cyan);
 }
 
-/* Active Listening State */
 .voice-btn.listening {
     border-color: var(--pink);
     color: var(--pink);
