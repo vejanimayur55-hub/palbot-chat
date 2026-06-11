@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 console.log("--------------------------------------------------");
 console.log("🚀 SYSTEM CHECK: Starting Pipbot Server...");
 
@@ -13,6 +15,9 @@ const PORT = process.env.PORT || 3000;
 // SECURE KEY HANDLING
 // We read this from Render's "Environment Variables"
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
+
+// Add this line to test:
+console.log("Did the API key load? :", GROQ_API_KEY ? "YES ✅" : "NO ❌");
 
 app.use(express.json());
 app.use(cors());
